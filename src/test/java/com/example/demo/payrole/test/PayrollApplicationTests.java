@@ -8,6 +8,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import com.example.demo.payrole.Employee;
+
 import lombok.extern.slf4j.Slf4j;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -24,13 +26,16 @@ public class PayrollApplicationTests {
     @Tag("demo")
     public void contextLoads() {
         log.info("Starting test");
-        log.info("Starting test");
-        String message = restTemplate
-            .getForObject("/employees/1", String.class);
+        Employee employee = restTemplate
+            .getForObject("/employees/1", Employee.class);
 
         log.info("Doing Assert");
 
-        assertEquals("{\"id\":1,\"name\":\"Bilbo Baggins\",\"role\":\"burglar\"}", message);
+        Employee expectedOne = new Employee()
+            .setName("Bilbo Baggins")
+            .setRole("burglar");
+
+        assertEquals(expectedOne, employee);
     }
 
 }

@@ -58,7 +58,8 @@ allprojects {
     }
 
     junitPlatform {
-        logManager 'org.apache.logging.log4j.jul.LogManager'
+        details 'verbose'
+        logManager 'org.apache.logging.log4j.jul.CoreLoggerTest'
     }
 
 }

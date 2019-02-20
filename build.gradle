@@ -19,7 +19,7 @@ buildscript {
 ext {
     junitJupiterVersion = '5.4.0'
     log4jVersion = '2.11.1'
-    lombokVersion = '1.18.4'
+    lombokVersion = '1.18.6'
     apacheCommonsCollection = '4.3'
     apacheStringUtils = '3.8.1'
 }
@@ -38,6 +38,8 @@ sourceCompatibility = 1.8
 group = 'user'
 
 dependencies {
+    annotationProcessor("org.projectlombok:lombok:$lombokVersion")
+    
     implementation('org.springframework.boot:spring-boot-starter-data-jpa',
             'org.springframework.boot:spring-boot-starter-web',
             "org.apache.commons:commons-collections4:$apacheCommonsCollection",

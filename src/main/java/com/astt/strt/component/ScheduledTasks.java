@@ -26,6 +26,7 @@ public class ScheduledTasks {
 
         List<User> terminatedUsers = repository.findAll()
                 .stream()
+                .filter(user -> !user.getIsNotBusy())
                 .filter(user -> MINUTES.between(user.getTimeStamp(), LocalDate.now()) > 5)
                 .map(user -> user.setIsNotBusy(Boolean.TRUE))
                 .map(user -> user.setTimeStamp(LocalDate.now()))

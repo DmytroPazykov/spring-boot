@@ -78,7 +78,7 @@ jib {
         image = "openjdk:8-slim"
     }
     to {
-        image = "dpazykov:1.0.2"
+        image = "user-provider-service:1.0.0"
     }
     container {
         // Set JVM options.

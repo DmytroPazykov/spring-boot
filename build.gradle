@@ -1,6 +1,7 @@
 buildscript {
     ext {
         springBootVersion = '2.1.2.RELEASE'
+        jibVersion = '0.10.1'
     }
     repositories {
         jcenter()
@@ -10,47 +11,47 @@ buildscript {
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath "gradle.plugin.com.google.cloud.tools:jib-gradle-plugin:${jibVersion}"
     }
 }
 
-allprojects {
 
-    ext {
-        junitJupiterVersion = '5.4.0'
-        log4jVersion = '2.11.1'
-        lombokVersion = '1.18.6'
-        apacheCommonsCollection = '4.3'
-        apacheStringUtils = '3.8.1'
-    }
+ext {
+    junitJupiterVersion = '5.4.0'
+    log4jVersion = '2.11.1'
+    lombokVersion = '1.18.4'
+    apacheCommonsCollection = '4.3'
+    apacheStringUtils = '3.8.1'
+}
 
-    repositories {
-        jcenter() // or Maven central, required for Lombok dependency
-        mavenCentral()
-    }
+repositories {
+    jcenter() // or Maven central, required for Lombok dependency
+    mavenCentral()
+}
 
-    apply plugin: 'java'
-    apply plugin: 'org.springframework.boot'
-    apply plugin: 'io.spring.dependency-management'
+apply plugin: 'java'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'com.google.cloud.tools.jib'
 
-    sourceCompatibility = 1.11
+sourceCompatibility = 1.8
+group = 'user'
 
-    dependencies {
-        implementation('org.springframework.boot:spring-boot-starter-data-jpa',
-                'org.springframework.boot:spring-boot-starter-web',
-                "org.apache.commons:commons-collections4:$apacheCommonsCollection",
-                "org.projectlombok:lombok:$lombokVersion",
-                "org.apache.commons:commons-lang3:$apacheStringUtils")
+dependencies {
+    implementation('org.springframework.boot:spring-boot-starter-data-jpa',
+            'org.springframework.boot:spring-boot-starter-web',
+            "org.apache.commons:commons-collections4:$apacheCommonsCollection",
+            "org.projectlombok:lombok:$lombokVersion",
+            "org.apache.commons:commons-lang3:$apacheStringUtils")
 
-        runtime('com.h2database:h2')
+    runtime('com.h2database:h2')
 
-        testImplementation("org.junit.jupiter:junit-jupiter:$junitJupiterVersion",
-                'org.springframework.boot:spring-boot-starter-test',
-                'javax.xml.bind:jaxb-api')
+    testImplementation("org.junit.jupiter:junit-jupiter:$junitJupiterVersion",
+            'org.springframework.boot:spring-boot-starter-test',
+            'javax.xml.bind:jaxb-api')
 
-        testRuntime("org.apache.logging.log4j:log4j-core:${log4jVersion}",
-                "org.apache.logging.log4j:log4j-jul:${log4jVersion}")
-
-    }
+    testRuntime("org.apache.logging.log4j:log4j-core:${log4jVersion}",
+            "org.apache.logging.log4j:log4j-jul:${log4jVersion}")
 }
 
 test {
@@ -68,4 +69,27 @@ test {
     reports {
         html.enabled = true
     }
+}
+
+jib {
+    from {
+        image = "openjdk:8-slim"
+    }
+    to {
+        image = "dpazykov:1.0.2"
+    }
+    container {
+        // Set JVM options.
+        jvmFlags = ['-XX:+UnlockExperimentalVMOptions', '-XX:+UseCGroupMemoryLimitForHeap', '-Dserver.port=9000']
+        // Expose different port.
+        ports = ['9000']
+        // Add labels.
+        labels = [maintainer: 'dpazykov']
+    }
+
+}
+
+wrapper{
+    gradleVersion = '5.2.1'
+    distributionType = Wrapper.DistributionType.BIN
 }

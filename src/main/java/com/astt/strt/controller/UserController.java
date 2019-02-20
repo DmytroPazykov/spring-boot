@@ -1,5 +1,6 @@
 package com.astt.strt.controller;
 
+import com.astt.strt.configuration.UserRepository;
 import com.astt.strt.data.model.Role;
 import com.astt.strt.data.model.User;
 import com.astt.strt.exceptions.NoFreeUserByRoleException;

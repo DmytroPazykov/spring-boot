@@ -1,5 +1,15 @@
 package com.astt.strt.controller;
 
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.astt.strt.configuration.UserRepository;
 import com.astt.strt.data.model.Role;
 import com.astt.strt.data.model.User;
@@ -8,14 +18,9 @@ import com.astt.strt.exceptions.NoSuchRoleException;
 import com.astt.strt.exceptions.NoSuchUserException;
 import lombok.AllArgsConstructor;
 
-import org.springframework.web.bind.annotation.*;
-
-import java.util.Arrays;
-import java.util.List;
-
 @RestController
 @AllArgsConstructor
-class UserController {
+public class UserController {
 
     private final UserRepository repository;
 
@@ -32,7 +37,10 @@ class UserController {
                 .filter(el -> el.getLogin().equals(user.getLogin()))
                 .findAny()
                 .orElseThrow(() -> new NoSuchUserException(user.getLogin()));
-        userToBeReset.setIsNotBusy(Boolean.TRUE);
+
+        userToBeReset
+                .setIsNotBusy(Boolean.TRUE)
+                .setTimeStamp(LocalDate.now());
 
         return repository.save(userToBeReset);
     }
@@ -58,7 +66,9 @@ class UserController {
                 .findAny()
                 .orElseThrow(() -> new NoFreeUserByRoleException(parsedRole));
 
-        userToWorkWith.setIsNotBusy(Boolean.FALSE);
+        userToWorkWith
+                .setIsNotBusy(Boolean.FALSE)
+                .setTimeStamp(LocalDate.now());
 
         return repository.save(userToWorkWith);
     }

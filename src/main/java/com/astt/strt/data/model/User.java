@@ -1,13 +1,14 @@
 package com.astt.strt.data.model;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.time.LocalDate;
 import java.util.Objects;
+
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 import static java.util.Objects.isNull;
 
@@ -26,6 +27,7 @@ public class User {
     private String username;
     private Role role;
     private Boolean isNotBusy;
+    private LocalDate timeStamp;
 
     public User(String login, String password, String username, Role role) {
         this.login = login;
@@ -33,6 +35,7 @@ public class User {
         this.username = username;
         this.role = role;
         this.isNotBusy = Boolean.TRUE;
+        this.timeStamp = LocalDate.now();
     }
 
     @Override

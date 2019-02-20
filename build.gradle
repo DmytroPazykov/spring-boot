@@ -39,7 +39,7 @@ group = 'user'
 
 dependencies {
     annotationProcessor("org.projectlombok:lombok:$lombokVersion")
-    
+
     implementation('org.springframework.boot:spring-boot-starter-data-jpa',
             'org.springframework.boot:spring-boot-starter-web',
             "org.apache.commons:commons-collections4:$apacheCommonsCollection",
@@ -91,7 +91,7 @@ jib {
 
 }
 
-wrapper{
+wrapper {
     gradleVersion = '5.2.1'
     distributionType = Wrapper.DistributionType.BIN
 }

@@ -5,21 +5,18 @@ import com.astt.strt.data.model.User;
 import com.astt.strt.exceptions.NoFreeUserByRoleException;
 import com.astt.strt.exceptions.NoSuchRoleException;
 import com.astt.strt.exceptions.NoSuchUserException;
+import lombok.AllArgsConstructor;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.List;
 
 @RestController
+@AllArgsConstructor
 class UserController {
 
     private final UserRepository repository;
-
-    UserController(UserRepository repository) {
-        this.repository = repository;
-    }
-
-    // Aggregate root
 
     @GetMapping("/users")
     List<User> all() {
@@ -35,9 +32,8 @@ class UserController {
                 .findAny()
                 .orElseThrow(() -> new NoSuchUserException(user.getLogin()));
         userToBeReset.setIsNotBusy(Boolean.TRUE);
-        repository.save(userToBeReset);
 
-        return userToBeReset;
+        return repository.save(userToBeReset);
     }
 
     @PostMapping("/user")
@@ -45,8 +41,6 @@ class UserController {
 
         return repository.save(user);
     }
-
-    // Single item
 
     @GetMapping("/user/role/{role}")
     User getUserByRole(@PathVariable String role) {
@@ -65,8 +59,6 @@ class UserController {
 
         userToWorkWith.setIsNotBusy(Boolean.FALSE);
 
-        repository.save(userToWorkWith);
-
-        return userToWorkWith;
+        return repository.save(userToWorkWith);
     }
 }

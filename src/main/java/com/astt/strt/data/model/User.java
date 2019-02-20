@@ -17,9 +17,9 @@ import static java.util.Objects.isNull;
 @Accessors(chain = true)
 public class User {
 
-    private @Id
+    @Id
     @GeneratedValue
-    Integer id;
+    private Integer id;
 
     private String login;
     private String password;

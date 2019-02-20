@@ -1,0 +1,30 @@
+sudo: true
+
+git:
+  depth: 99999
+
+language: java
+
+jdk:
+  - oraclejdk8
+
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+
+install: true
+
+branches:
+  only:
+    - master
+
+jobs:
+  include:
+    - stage: executing tests
+      script:
+        - ./gradlew clean test

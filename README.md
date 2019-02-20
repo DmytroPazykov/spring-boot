@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/DmytroPazykov/spring-boot.svg?branch=master)](https://travis-ci.com/DmytroPazykov/spring-boot)
+
 # user-provider-service
 
 Project main goal is to provide simple service for user vocabulary

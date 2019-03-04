@@ -1,7 +1,7 @@
 package com.astt.strt.test;
 
-import com.astt.strt.data.model.Role;
-import com.astt.strt.data.model.User;
+import java.util.Arrays;
+
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Assert;
 import org.junit.jupiter.api.Tag;
@@ -14,14 +14,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.util.Arrays;
+import com.astt.strt.data.model.Role;
+import com.astt.strt.data.model.User;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+        properties = "clean.cron.time=1 * * * * ?")
 public class ConfigApplicationTests {
 
     private static final String GET_USER_BY_ROLE_URL = "/user/role/{role}";
@@ -137,7 +141,7 @@ public class ConfigApplicationTests {
         Assert.assertTrue("User that being in use, hasn't been marked as busy one", anyMatch);
 
         restTemplate
-                .postForEntity(POST_USER_RESET_URL, user, String.class);
+                .put(POST_USER_RESET_URL, user, String.class);
 
         users = restTemplate
                 .getForObject(GET_ALL_USERS_URL, User[].class);

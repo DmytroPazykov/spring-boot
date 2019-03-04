@@ -1,6 +1,6 @@
 package com.astt.strt.component;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,19 +21,21 @@ public class ScheduledTasks {
 
     private final UserRepository repository;
 
-    @Scheduled(fixedRate = 5000)
+    @Scheduled(cron = "1 * * * * ?")
     public void reportCurrentTime() {
 
-        List<User> terminatedUsers = repository.findAll()
+        log.info("Scheduled procedure has been started");
+
+        List<User> terminatedUsers = repository.findByIsNotBusyFalse()
                 .stream()
-                .filter(user -> !user.getIsNotBusy())
-                .filter(user -> MINUTES.between(user.getTimeStamp(), LocalDate.now()) > 5)
+                .filter(user -> MINUTES.between(user.getTimeStamp(), LocalDateTime.now()) > 0)
                 .map(user -> user.setIsNotBusy(Boolean.TRUE))
-                .map(user -> user.setTimeStamp(LocalDate.now()))
+                .map(user -> user.setTimeStamp(LocalDateTime.now()))
                 .collect(Collectors.toList());
 
         repository.saveAll(terminatedUsers);
 
         terminatedUsers.forEach(user -> log.info("User has been terminated after 5 minutes in use - " + user.getLogin()));
+        log.info("Scheduled procedure has been finished");
     }
 }

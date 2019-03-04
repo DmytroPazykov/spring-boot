@@ -1,6 +1,6 @@
 package com.astt.strt.controller;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -17,7 +17,11 @@ import com.astt.strt.exceptions.NoFreeUserByRoleException;
 import com.astt.strt.exceptions.NoSuchRoleException;
 import com.astt.strt.exceptions.NoSuchUserException;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+import static java.util.Objects.isNull;
+
+@Slf4j
 @RestController
 @AllArgsConstructor
 public class UserController {
@@ -32,15 +36,15 @@ public class UserController {
     @PostMapping("/user/reset")
     User resetUser(@RequestBody User user) {
 
-        User userToBeReset = repository.findAll()
-                .stream()
-                .filter(el -> el.getLogin().equals(user.getLogin()))
-                .findAny()
-                .orElseThrow(() -> new NoSuchUserException(user.getLogin()));
+        User userToBeReset = repository.findByLogin(user.getLogin());
+
+        if (isNull(userToBeReset)){
+            throw new NoSuchUserException(user.getLogin());
+        }
 
         userToBeReset
                 .setIsNotBusy(Boolean.TRUE)
-                .setTimeStamp(LocalDate.now());
+                .setTimeStamp(LocalDateTime.now().plusMinutes(5));
 
         return repository.save(userToBeReset);
     }
@@ -59,16 +63,15 @@ public class UserController {
                 .findAny()
                 .orElseThrow(() -> new NoSuchRoleException(role));
 
-        User userToWorkWith = repository.findAll()
+        User userToWorkWith = repository.findByRoleAndIsNotBusy(parsedRole, Boolean.TRUE)
                 .stream()
-                .filter(employee -> employee.getRole().equals(parsedRole))
-                .filter(User::getIsNotBusy)
                 .findAny()
                 .orElseThrow(() -> new NoFreeUserByRoleException(parsedRole));
 
         userToWorkWith
                 .setIsNotBusy(Boolean.FALSE)
-                .setTimeStamp(LocalDate.now());
+                .setTimeStamp(LocalDateTime.now().plusMinutes(5));
+
 
         return repository.save(userToWorkWith);
     }

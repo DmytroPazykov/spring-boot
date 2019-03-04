@@ -84,7 +84,7 @@ jib {
         // Set JVM options.
         jvmFlags = ['-XX:+UnlockExperimentalVMOptions', '-XX:+UseCGroupMemoryLimitForHeap', '-Dserver.port=9000']
         // Expose different port.
-        ports = ['9000']
+        ports = ['9090']
         // Add labels.
         labels = [maintainer: 'dpazykov']
     }

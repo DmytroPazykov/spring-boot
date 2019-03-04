@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -21,7 +22,7 @@ public class ScheduledTasks {
 
     private final UserRepository repository;
 
-    @Scheduled(cron = "1 * * * * ?")
+    @Scheduled(cron = "${clean.cron.time}")
     public void reportCurrentTime() {
 
         log.info("Scheduled procedure has been started");
